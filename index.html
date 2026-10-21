@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MedToken - Local Clinic Doctor Appointment and Token Booking System. Easy OPD token registration, specialist directory, and live queue tracking.">
+  <meta name="keywords" content="doctor appointment, clinic token booking, OPD queue, medical consultation, healthcare portal, CSE326 project">
+  <meta name="author" content="Team Elite (Rohit, Harsh, Abhay) - Lovely Professional University">
+  <title>MedToken - Local Clinic Doctor Appointment & Token Booking System</title>
+  
+  <!-- Google Fonts for Modern Healthcare Aesthetics -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons for Crisp UI -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Emergency & Announcement Bar -->
+  <aside class="top-announcement" aria-label="Emergency and Announcements">
+    <div class="announcement-content">
+      <span class="emergency-badge"><i class="fa-solid fa-phone-volume"></i> 24/7 Helpline: +91 1800-200-CARE (108)</span>
+      <span class="clinic-hours"><i class="fa-regular fa-clock"></i> OPD Hours: 08:30 AM – 08:00 PM (Mon – Sat)</span>
+      <span class="live-status"><span class="pulse-dot"></span> Clinic Open & Accepting Token Bookings</span>
+    </div>
+  </aside>
+
+  <!-- Sticky Modern Navigation Header -->
+  <header class="app-header" id="top">
+    <div class="header-container">
+      <a href="#top" class="brand-logo" aria-label="MedToken Home">
+        <div class="logo-icon"><i class="fa-solid fa-staff-snake"></i></div>
+        <div class="logo-text">
+          <span class="brand-title">Med<span class="brand-accent">Token</span></span>
+          <span class="brand-tagline">Local Community Clinic OPD</span>
+        </div>
+      </a>
+
+      <!-- Navigation Menu -->
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="#hero" class="nav-item active"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="#directory" class="nav-item"><i class="fa-solid fa-user-doctor"></i> Specialists</a>
+        <a href="#booking" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Book Token</a>
+        <a href="#queue-tracker" class="nav-item"><i class="fa-solid fa-list-ol"></i> Live Queue</a>
+        <a href="#facilities" class="nav-item"><i class="fa-solid fa-hospital"></i> Facilities</a>
+      </nav>
+
+      <!-- Header Action -->
+      <div class="header-cta">
+        <a href="#booking" class="btn btn-primary btn-sm"><i class="fa-solid fa-ticket"></i> Fast Token</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section with Real-Time Stats -->
+    <section id="hero" class="hero-section">
+      <div class="hero-container">
+        <div class="hero-content">
+          <span class="hero-pill"><i class="fa-solid fa-circle-check"></i> Smart Healthcare Token System</span>
+          <h1 class="hero-title">Skip the Waiting Lines at Your Local Clinic</h1>
+          <p class="hero-description">
+            Schedule consultation appointments with certified doctors in seconds. Select your preferred OPD time slot, get an instant digital token pass, and track live queue progress in real time.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#booking" class="btn btn-primary btn-lg"><i class="fa-solid fa-calendar-plus"></i> Book OPD Token Now</a>
+            <a href="#directory" class="btn btn-outline btn-lg"><i class="fa-solid fa-user-doctor"></i> View Doctors</a>
+          </div>
+
+          <!-- Live Clinic Counter Statistics -->
+          <div class="hero-stats-grid">
+            <div class="stat-card">
+              <span class="stat-number">1,450+</span>
+              <span class="stat-label">Tokens Issued</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">12 mins</span>
+              <span class="stat-label">Avg. Wait Time</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">4.9/5</span>
+              <span class="stat-label">Patient Rating</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">100%</span>
+              <span class="stat-label">Verified Doctors</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Queue Monitor Card -->
+        <div class="hero-visual">
+          <div class="live-token-monitor" id="queue-tracker">
+            <div class="monitor-header">
+              <div class="monitor-indicator">
+                <span class="live-led"></span>
+                <span>LIVE OPD QUEUE MONITOR</span>
+              </div>
+              <span class="room-tag">Room 102 - OPD Hall</span>
+            </div>
+            <div class="monitor-body">
+              <div class="current-token-display">
+                <span class="now-serving-title">Now Serving</span>
+                <div class="token-giant" id="liveServingToken">#TK-042</div>
+                <div class="current-doc-info">
+                  <strong>Dr. Rohit Kumar</strong> (General Physician)
+                </div>
+              </div>
+              <div class="queue-mini-list">
+                <div class="queue-row next">
+                  <span>Next in Line:</span>
+                  <strong id="nextServingToken">#TK-043</strong>
+                  <span class="badge-status wait">In Waiting Area</span>
+                </div>
+                <div class="queue-row">
+                  <span>Following Token:</span>
+                  <strong>#TK-044</strong>
+                  <span class="badge-status queue">Queued</span>
+                </div>
+                <div class="queue-row">
+                  <span>Estimated Wait:</span>
+                  <strong>~10 - 15 Mins</strong>
+                  <span class="badge-status fast">Normal Flow</span>
+                </div>
+              </div>
+            </div>
+            <div class="monitor-footer">
+              <small><i class="fa-solid fa-rotate"></i> Auto-refreshes every 45 seconds • Updated just now</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Unit II Semantic Layout: Directory & Filter Section -->
+    <section id="directory" class="directory-section">
+      <div class="section-container">
+        <div class="section-header text-center">
+          <span class="sub-heading">Expert Medical Team</span>
+          <h2 class="section-title">Our Specialist Doctors</h2>
+          <p class="section-subtitle">Choose from experienced medical practitioners available for consultation today</p>
+        </div>
+
+        <!-- Specialty Interactive Filter Buttons -->
+        <div class="filter-container" role="group" aria-label="Specialty Filters">
+          <button class="filter-btn active" data-specialty="all">
+            <i class="fa-solid fa-stethoscope"></i> All Specialties
+          </button>
+          <button class="filter-btn" data-specialty="general">
+            <i class="fa-solid fa-user-md"></i> General Physician
+          </button>
+          <button class="filter-btn" data-specialty="pediatrician">
+            <i class="fa-solid fa-baby"></i> Pediatrician
+          </button>
+          <button class="filter-btn" data-specialty="dermatologist">
+            <i class="fa-solid fa-hand-holding-medical"></i> Dermatologist
+          </button>
+          <button class="filter-btn" data-specialty="dentist">
+            <i class="fa-solid fa-tooth"></i> Dentist
+          </button>
+        </div>
+
+        <!-- Doctor Profile Cards (CSS Grid Layout) -->
+        <div class="doctor-grid" id="doctorGrid">
+          
+          <!-- Doctor 1: General Physician -->
+          <article class="doctor-card" data-specialty="general" data-id="doc-rohit">
+            <div class="card-badge available"><i class="fa-solid fa-circle"></i> Available Today</div>
+            <div class="doc-media">
+              <img src="assets/doctor1.jpg" alt="Dr. Rohit Kumar - General Physician" class="doc-img">
+              <span class="doc-experience">12+ Yrs Exp</span>
+            </div>
+            <div class="doc-details">
+              <div class="doc-rating">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star-half-stroke"></i>
+                <span class="rating-num">4.9 (184 reviews)</span>
+              </div>
+              <h3 class="doc-name">Dr. Rohit Kumar</h3>
+              <p class="specialty-label"><i class="fa-solid fa-stethoscope"></i> General Physician & Internal Medicine</p>
+              
+              <ul class="doc-info-list">
+                <li>
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  <span><strong>Qualifications:</strong> MBBS, MD (Internal Medicine)</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-indian-rupee-sign"></i>
+                  <span><strong>Consultation Fee:</strong> ₹500</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-door-open"></i>
+                  <span><strong>OPD Chamber:</strong> Room 102 (Ground Floor)</span>
+                </li>
+                <li>
+                  <i class="fa-regular fa-clock"></i>
+                  <span><strong>Hours:</strong> 09:00 AM – 01:00 PM</span>
+                </li>
+              </ul>
+              
+              <button type="button" class="btn btn-primary btn-block select-doc-btn" 
+                data-name="Dr. Rohit Kumar" 
+                data-specialty="General Physician" 
+                data-fee="500" 
+                data-room="Room 102"
+                data-hours="09:00 AM - 01:00 PM">
+                <i class="fa-solid fa-calendar-check"></i> Select Doctor & Slots
+              </button>
+            </div>
+          </article>
+
+          <!-- Doctor 2: Pediatrician -->
+          <article class="doctor-card" data-specialty="pediatrician" data-id="doc-priya">
+            <div class="card-badge available"><i class="fa-solid fa-circle"></i> Available Today</div>
+            <div class="doc-media">
+              <img src="assets/doctor2.jpg" alt="Dr. Priya Sharma - Pediatrician" class="doc-img">
+              <span class="doc-experience">9+ Yrs Exp</span>
+            </div>
+            <div class="doc-details">
+              <div class="doc-rating">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <span class="rating-num">5.0 (210 reviews)</span>
+              </div>
+              <h3 class="doc-name">Dr. Priya Sharma</h3>
+              <p class="specialty-label"><i class="fa-solid fa-baby"></i> Child Care & Pediatrician</p>
+              
+              <ul class="doc-info-list">
+                <li>
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  <span><strong>Qualifications:</strong> MBBS, DCH, MD (Pediatrics)</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-indian-rupee-sign"></i>
+                  <span><strong>Consultation Fee:</strong> ₹600</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-door-open"></i>
+                  <span><strong>OPD Chamber:</strong> Room 105 (Child Care Wing)</span>
+                </li>
+                <li>
+                  <i class="fa-regular fa-clock"></i>
+                  <span><strong>Hours:</strong> 10:00 AM – 02:00 PM</span>
+                </li>
+              </ul>
+              
+              <button type="button" class="btn btn-primary btn-block select-doc-btn" 
+                data-name="Dr. Priya Sharma" 
+                data-specialty="Pediatrician" 
+                data-fee="600" 
+                data-room="Room 105"
+                data-hours="10:00 AM - 02:00 PM">
+                <i class="fa-solid fa-calendar-check"></i> Select Doctor & Slots
+              </button>
+            </div>
+          </article>
+
+          <!-- Doctor 3: Dermatologist -->
+          <article class="doctor-card" data-specialty="dermatologist" data-id="doc-rahul">
+            <div class="card-badge available"><i class="fa-solid fa-circle"></i> Available Today</div>
+            <div class="doc-media">
+              <img src="assets/doctor3.jpg" alt="Dr. Rahul Sharma - Dermatologist" class="doc-img">
+              <span class="doc-experience">11+ Yrs Exp</span>
+            </div>
+            <div class="doc-details">
+              <div class="doc-rating">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+                <span class="rating-num">4.8 (142 reviews)</span>
+              </div>
+              <h3 class="doc-name">Dr. Rahul Sharma</h3>
+              <p class="specialty-label"><i class="fa-solid fa-hand-holding-medical"></i> Dermatologist & Skin Specialist</p>
+              
+              <ul class="doc-info-list">
+                <li>
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  <span><strong>Qualifications:</strong> MBBS, MD, DVD (Skin & VD)</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-indian-rupee-sign"></i>
+                  <span><strong>Consultation Fee:</strong> ₹750</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-door-open"></i>
+                  <span><strong>OPD Chamber:</strong> Room 204 (First Floor)</span>
+                </li>
+                <li>
+                  <i class="fa-regular fa-clock"></i>
+                  <span><strong>Hours:</strong> 02:00 PM – 06:00 PM</span>
+                </li>
+              </ul>
+              
+              <button type="button" class="btn btn-primary btn-block select-doc-btn" 
+                data-name="Dr. Rahul Sharma" 
+                data-specialty="Dermatologist" 
+                data-fee="750" 
+                data-room="Room 204"
+                data-hours="02:00 PM - 06:00 PM">
+                <i class="fa-solid fa-calendar-check"></i> Select Doctor & Slots
+              </button>
+            </div>
+          </article>
+
+          <!-- Doctor 4: Dentist -->
+          <article class="doctor-card" data-specialty="dentist" data-id="doc-ananya">
+            <div class="card-badge available"><i class="fa-solid fa-circle"></i> Available Today</div>
+            <div class="doc-media">
+              <img src="assets/doctor4.jpg" alt="Dr. Ananya Sen - Dental Surgeon" class="doc-img">
+              <span class="doc-experience">8+ Yrs Exp</span>
+            </div>
+            <div class="doc-details">
+              <div class="doc-rating">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <span class="rating-num">4.9 (165 reviews)</span>
+              </div>
+              <h3 class="doc-name">Dr. Ananya Sen</h3>
+              <p class="specialty-label"><i class="fa-solid fa-tooth"></i> BDS, MDS - Dental Specialist</p>
+              
+              <ul class="doc-info-list">
+                <li>
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  <span><strong>Qualifications:</strong> BDS, MDS (Conservative Dentistry)</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-indian-rupee-sign"></i>
+                  <span><strong>Consultation Fee:</strong> ₹500</span>
+                </li>
+                <li>
+                  <i class="fa-solid fa-door-open"></i>
+                  <span><strong>OPD Chamber:</strong> Room 208 (Dental Clinic)</span>
+                </li>
+                <li>
+                  <i class="fa-regular fa-clock"></i>
+                  <span><strong>Hours:</strong> 04:00 PM – 08:00 PM</span>
+                </li>
+              </ul>
+              
+              <button type="button" class="btn btn-primary btn-block select-doc-btn" 
+                data-name="Dr. Ananya Sen" 
+                data-specialty="Dentist" 
+                data-fee="500" 
+                data-room="Room 208"
+                data-hours="04:00 PM - 08:00 PM">
+                <i class="fa-solid fa-calendar-check"></i> Select Doctor & Slots
+              </button>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Booking Section: Interactive Time Grid & Semantic Form -->
+    <section id="booking" class="booking-section">
+      <div class="section-container">
+        <div class="section-header text-center">
+          <span class="sub-heading">Fast OPD Booking</span>
+          <h2 class="section-title">Secure Your Token Slot</h2>
+          <p class="section-subtitle">Choose a convenient date and consultation time window, then fill patient information</p>
+        </div>
+
+        <div class="booking-container">
+          
+          <!-- Left Column: Interactive Slot & Date Picker -->
+          <div class="slot-picker">
+            <div class="picker-header">
+              <h3><i class="fa-regular fa-calendar-days"></i> Step 1: Choose Date & Slot</h3>
+              <span class="picker-step-badge">Step 1 of 2</span>
+            </div>
+
+            <!-- Selected Doctor Summary Preview -->
+            <div class="selected-doctor-banner" id="selectedDoctorBanner">
+              <div class="doc-banner-icon"><i class="fa-solid fa-user-doctor"></i></div>
+              <div class="doc-banner-info">
+                <span class="label">Assigned Practitioner:</span>
+                <strong id="bannerDocName">Dr. Rohit Kumar</strong>
+                <span class="sub" id="bannerDocSpec">General Physician • Room 102</span>
+              </div>
+              <div class="doc-banner-fee">
+                <span class="fee-label">Consultation</span>
+                <span class="fee-amt" id="bannerDocFee">₹500</span>
+              </div>
+            </div>
+
+            <!-- Date Selection Tabs -->
+            <div class="date-selector-group">
+              <label class="picker-label">Select Appointment Day:</label>
+              <div class="date-tabs" role="tablist">
+                <button type="button" class="date-tab active" data-date="today">
+                  <span class="day">Today</span>
+                  <span class="full-date" id="tabDateToday">21 Oct</span>
+                </button>
+                <button type="button" class="date-tab" data-date="tomorrow">
+                  <span class="day">Tomorrow</span>
+                  <span class="full-date" id="tabDateTomorrow">22 Oct</span>
+                </button>
+                <button type="button" class="date-tab" data-date="dayafter">
+                  <span class="day">Day After</span>
+                  <span class="full-date" id="tabDateDayAfter">23 Oct</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Slot Legend -->
+            <div class="slot-legend">
+              <span class="legend-item"><span class="legend-dot available"></span> Available</span>
+              <span class="legend-item"><span class="legend-dot selected"></span> Selected</span>
+              <span class="legend-item"><span class="legend-dot booked"></span> Booked</span>
+            </div>
+
+            <!-- Morning Slots -->
+            <div class="time-slot-category">
+              <h4><i class="fa-solid fa-sun text-warning"></i> Morning OPD Consultation</h4>
+              <div class="time-grid" id="morningGrid">
+                <button type="button" class="slot-box available" data-time="09:00 AM">09:00 AM</button>
+                <button type="button" class="slot-box available" data-time="09:30 AM">09:30 AM</button>
+                <button type="button" class="slot-box booked" disabled title="Slot already filled">10:00 AM (Booked)</button>
+                <button type="button" class="slot-box available" data-time="10:30 AM">10:30 AM</button>
+                <button type="button" class="slot-box available" data-time="11:00 AM">11:00 AM</button>
+                <button type="button" class="slot-box booked" disabled title="Slot already filled">11:30 AM (Booked)</button>
+              </div>
+            </div>
+
+            <!-- Afternoon & Evening Slots -->
+            <div class="time-slot-category">
+              <h4><i class="fa-solid fa-cloud-sun text-primary"></i> Afternoon & Evening OPD</h4>
+              <div class="time-grid" id="afternoonGrid">
+                <button type="button" class="slot-box available" data-time="02:00 PM">02:00 PM</button>
+                <button type="button" class="slot-box available" data-time="02:30 PM">02:30 PM</button>
+                <button type="button" class="slot-box booked" disabled title="Slot already filled">03:00 PM (Booked)</button>
+                <button type="button" class="slot-box available" data-time="04:00 PM">04:00 PM</button>
+                <button type="button" class="slot-box available" data-time="04:30 PM">04:30 PM</button>
+                <button type="button" class="slot-box available" data-time="05:30 PM">05:30 PM</button>
+              </div>
+            </div>
+
+            <!-- Active Slot Selection Alert -->
+            <div class="slot-feedback" id="slotFeedback">
+              <i class="fa-solid fa-circle-info"></i>
+              <span id="slotFeedbackText">Please select a preferred consultation time slot above.</span>
+            </div>
+          </div>
+
+          <!-- Right Column: Patient Information Semantic Form -->
+          <div class="form-container">
+            <div class="form-header">
+              <h3><i class="fa-solid fa-id-card"></i> Step 2: Patient Registration</h3>
+              <span class="picker-step-badge">Step 2 of 2</span>
+            </div>
+
+            <form class="appointment-form" id="appointmentForm" action="#" method="POST" novalidate>
+              
+              <!-- Doctor Select Dropdown -->
+              <div class="form-group">
+                <label for="doctorSelect"><i class="fa-solid fa-user-doctor"></i> Consulting Doctor <span class="required">*</span></label>
+                <select id="doctorSelect" name="doctorSelect" required class="form-control">
+                  <option value="Dr. Rohit Kumar" data-specialty="General Physician" data-fee="500" data-room="Room 102" selected>Dr. Rohit Kumar (General Physician - ₹500)</option>
+                  <option value="Dr. Priya Sharma" data-specialty="Pediatrician" data-fee="600" data-room="Room 105">Dr. Priya Sharma (Pediatrician - ₹600)</option>
+                  <option value="Dr. Rahul Sharma" data-specialty="Dermatologist" data-fee="750" data-room="Room 204">Dr. Rahul Sharma (Dermatologist - ₹750)</option>
+                  <option value="Dr. Ananya Sen" data-specialty="Dentist" data-fee="500" data-room="Room 208">Dr. Ananya Sen (Dentist - ₹500)</option>
+                </select>
+                <small class="form-hint">Doctor room and fee update automatically</small>
+              </div>
+
+              <!-- Selected Time Slot Readonly Input -->
+              <div class="form-group">
+                <label for="selectedSlotInput"><i class="fa-regular fa-clock"></i> Chosen Consultation Slot <span class="required">*</span></label>
+                <input type="text" id="selectedSlotInput" name="selectedSlot" class="form-control" readonly placeholder="Click a slot from the picker on left" required>
+                <small class="form-hint">Click any blue time box on the left grid</small>
+              </div>
+
+              <div class="form-row">
+                <!-- Patient Full Name -->
+                <div class="form-group flex-2">
+                  <label for="patientName"><i class="fa-solid fa-user"></i> Patient Full Name <span class="required">*</span></label>
+                  <input type="text" id="patientName" name="patientName" required minlength="3" maxlength="60" placeholder="e.g. Abhay Kumar" class="form-control">
+                  <span class="validation-message">Name must be at least 3 characters.</span>
+                </div>
+
+                <!-- Patient Age -->
+                <div class="form-group flex-1">
+                  <label for="patientAge"><i class="fa-solid fa-cake-candles"></i> Age <span class="required">*</span></label>
+                  <input type="number" id="patientAge" name="patientAge" required min="1" max="120" placeholder="Years" class="form-control">
+                  <span class="validation-message">Valid age between 1-120.</span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <!-- Gender Selection -->
+                <div class="form-group flex-1">
+                  <label for="patientGender"><i class="fa-solid fa-venus-mars"></i> Gender <span class="required">*</span></label>
+                  <select id="patientGender" name="patientGender" required class="form-control">
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="form-group flex-2">
+                  <label for="patientPhone"><i class="fa-solid fa-phone"></i> Mobile Phone <span class="required">*</span></label>
+                  <input type="tel" id="patientPhone" name="patientPhone" required pattern="[0-9]{10}" placeholder="10-digit mobile number" class="form-control">
+                  <span class="validation-message">Enter valid 10-digit Indian phone number.</span>
+                </div>
+              </div>
+
+              <!-- Email (Optional for digital copy) -->
+              <div class="form-group">
+                <label for="patientEmail"><i class="fa-solid fa-envelope"></i> Email Address (for digital receipt)</label>
+                <input type="email" id="patientEmail" name="patientEmail" placeholder="patient@example.com" class="form-control">
+              </div>
+
+              <!-- Brief Symptoms Note -->
+              <div class="form-group">
+                <label for="symptoms"><i class="fa-solid fa-notes-medical"></i> Brief Symptoms / Reason for Visit</label>
+                <textarea id="symptoms" name="symptoms" rows="3" placeholder="Briefly describe your health concern (e.g. high fever, allergic skin rash, toothache)..." class="form-control"></textarea>
+              </div>
+
+              <!-- Emergency Priority Toggle -->
+              <div class="form-group checkbox-group">
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="isEmergency" name="isEmergency">
+                  <span class="checkmark"></span>
+                  <span class="checkbox-text">
+                    <strong>Priority / Urgent Consultation Required</strong>
+                    <small>Check if experiencing high fever, acute distress or sharp pain</small>
+                  </span>
+                </label>
+              </div>
+
+              <!-- Submit Button -->
+              <button type="submit" class="btn btn-primary btn-block submit-btn" id="generateTokenBtn">
+                <i class="fa-solid fa-ticket"></i> Confirm & Generate Digital Token
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Clinic Features & Guidelines -->
+    <section id="facilities" class="facilities-section">
+      <div class="section-container">
+        <div class="section-header text-center">
+          <span class="sub-heading">Clinic Standards</span>
+          <h2 class="section-title">Why Patients Choose MedToken OPD</h2>
+          <p class="section-subtitle">Advanced facilities designed for prompt local community healthcare</p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-stopwatch"></i></div>
+            <h3>Zero Queue Wastage</h3>
+            <p>Smart token allotment gives you an accurate reporting window so you spend less time in waiting rooms.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-pills"></i></div>
+            <h3>In-House Pharmacy</h3>
+            <p>Direct digital prescription forwarding to our 24/7 on-site medical dispensary for quick fulfillment.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-shield-virus"></i></div>
+            <h3>Certified Specialists</h3>
+            <p>Every practitioner is verified by Indian Medical Association (IMA) with established clinical records.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+            <h3>Instant Token Pass</h3>
+            <p>Save or print your token slip with a scannable verification QR code and live status tracking.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Academic Team & Project Details -->
+    <section class="team-section" id="team">
+      <div class="section-container">
+        <div class="section-header text-center">
+          <span class="sub-heading">CSE326 Internet Programming</span>
+          <h2 class="section-title">Project Development Team Elite</h2>
+          <p class="section-subtitle">Lovely Professional University • Web Technologies Assignment Portfolio</p>
+        </div>
+
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-avatar"><i class="fa-solid fa-code"></i></div>
+            <h3>Rohit Kumar</h3>
+            <span class="team-role">Frontend Lead • UI Architecture</span>
+            <p class="team-desc">Engineered the Hero section, Semantic Doctor Directory, and interactive specialty filters.</p>
+            <span class="git-branch-tag">branch: feature-directory-filters</span>
+          </div>
+
+          <div class="team-card featured">
+            <div class="team-avatar"><i class="fa-solid fa-palette"></i></div>
+            <h3>Harsh</h3>
+            <span class="team-role">CSS Architect • Responsive Grid</span>
+            <p class="team-desc">Designed modern CSS Variables, Flexbox/Grid doctor profile cards, and micro-interactions.</p>
+            <span class="git-branch-tag">branch: feature-profile-cards</span>
+          </div>
+
+          <div class="team-card">
+            <div class="team-avatar"><i class="fa-solid fa-calendar-check"></i></div>
+            <h3>Abhay</h3>
+            <span class="team-role">Forms & Booking Logic</span>
+            <p class="team-desc">Built the interactive Time Slot Grid, HTML5 validation form, and digital token generator.</p>
+            <span class="git-branch-tag">branch: feature-booking-system</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Digital Token Modal (Pass Card) -->
+  <div class="token-modal-overlay" id="tokenModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="token-modal-card">
+      <button class="modal-close-btn" id="closeModalBtn" aria-label="Close Token Dialog">&times;</button>
+      
+      <!-- Generated Token Ticket -->
+      <div class="token-pass" id="printableToken">
+        <div class="pass-header">
+          <div class="pass-brand">
+            <i class="fa-solid fa-staff-snake"></i> MedToken Clinic OPD
+          </div>
+          <span class="pass-status-pill" id="tokenPriorityBadge">CONFIRMED</span>
+        </div>
+
+        <div class="pass-token-hero">
+          <span class="token-prefix">APPOINTMENT TOKEN NUMBER</span>
+          <h2 class="token-number" id="modalTokenNum">#TK-108</h2>
+          <p class="token-est-time"><i class="fa-regular fa-clock"></i> Estimated Call Time: <strong id="modalEstTime">09:30 AM</strong></p>
+        </div>
+
+        <div class="pass-details-grid">
+          <div class="pass-item">
+            <span class="pass-label">Patient Name</span>
+            <strong class="pass-val" id="modalPatientName">Abhay Kumar</strong>
+          </div>
+          <div class="pass-item">
+            <span class="pass-label">Age / Gender</span>
+            <strong class="pass-val" id="modalAgeGender">21 Yrs / Male</strong>
+          </div>
+          <div class="pass-item">
+            <span class="pass-label">Consulting Doctor</span>
+            <strong class="pass-val" id="modalDoctor">Dr. Rohit Kumar</strong>
+          </div>
+          <div class="pass-item">
+            <span class="pass-label">Department</span>
+            <strong class="pass-val" id="modalSpecialty">General Physician</strong>
+          </div>
+          <div class="pass-item">
+            <span class="pass-label">OPD Chamber</span>
+            <strong class="pass-val" id="modalRoom">Room 102</strong>
+          </div>
+          <div class="pass-item">
+            <span class="pass-label">Consultation Fee</span>
+            <strong class="pass-val" id="modalFee">₹500 (Pay at desk)</strong>
+          </div>
+          <div class="pass-item">
+            <span class="pass-label">Appointment Date</span>
+            <strong class="pass-val" id="modalDate">Today, 21 Oct</strong>
+          </div>
+          <div class="pass-item">
+            <span class="pass-label">Queue Position</span>
+            <strong class="pass-val text-success" id="modalQueuePos">3rd in Line</strong>
+          </div>
+        </div>
+
+        <div class="pass-qr-row">
+          <div class="qr-mock">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <div class="qr-info">
+            <small><strong>Digital Token ID:</strong> <span id="modalUid">MED-2026-8708</span></small>
+            <p>Show this token pass on your mobile screen or bring a printout to the OPD reception counter.</p>
+          </div>
+        </div>
+
+        <div class="pass-instructions">
+          <p><i class="fa-solid fa-triangle-exclamation"></i> <strong>Instructions:</strong> Please arrive at the clinic 10 minutes prior to your time slot. If you miss your called token, you will be moved to the end of the current batch.</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary" id="printTokenBtn"><i class="fa-solid fa-print"></i> Print / Save Token</button>
+        <button type="button" class="btn btn-outline" id="bookAnotherBtn"><i class="fa-solid fa-plus"></i> New Booking</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-col brand-col">
+        <div class="brand-logo footer-logo">
+          <div class="logo-icon"><i class="fa-solid fa-staff-snake"></i></div>
+          <span class="brand-title">Med<span class="brand-accent">Token</span></span>
+        </div>
+        <p class="footer-desc">
+          A modern web-based local clinic OPD token and doctor appointment scheduling system developed for prompt healthcare delivery.
+        </p>
+        <div class="footer-badge">
+          <i class="fa-solid fa-graduation-cap"></i> CSE326: Internet Programming Project
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#directory">Specialist Directory</a></li>
+          <li><a href="#booking">Book Consultation</a></li>
+          <li><a href="#queue-tracker">Live OPD Queue</a></li>
+          <li><a href="#facilities">Clinic Services</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Specialties Available</h4>
+        <ul class="footer-links">
+          <li><a href="#directory">General Medicine</a></li>
+          <li><a href="#directory">Pediatrics (Child Care)</a></li>
+          <li><a href="#directory">Dermatology (Skin Care)</a></li>
+          <li><a href="#directory">Dental Surgery</a></li>
+          <li><a href="#directory">Preventive Health Checkup</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Clinic Location & Contact</h4>
+        <p class="contact-line"><i class="fa-solid fa-location-dot"></i> Community Health Center, LPU Campus, Jalandhar-Delhi G.T. Road, Punjab</p>
+        <p class="contact-line"><i class="fa-solid fa-phone"></i> +91 1824-517000 / Emergency: 108</p>
+        <p class="contact-line"><i class="fa-solid fa-envelope"></i> clinic-help@medtoken.lpu.in</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <p>&copy; 2026 MedToken Clinic. Academic Coursework Project Designed by <strong>Team Elite (Rohit, Harsh, Abhay)</strong>.</p>
+        <p class="compliance-badge"><i class="fa-solid fa-code"></i> Built with Semantic HTML5 & Advanced CSS</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>
