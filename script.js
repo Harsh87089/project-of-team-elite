@@ -7,6 +7,74 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
+  // 0. Dark / Light Clinical Theme Toggle (Unit III)
+  // ==========================================
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  const themeIcon = document.getElementById('themeIcon');
+  const savedTheme = localStorage.getItem('medtoken_theme');
+  const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initialTheme = savedTheme ? savedTheme : (systemPrefersDark ? 'dark' : 'light');
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (themeIcon) {
+      if (theme === 'dark') {
+        themeIcon.className = 'fa-solid fa-sun';
+      } else {
+        themeIcon.className = 'fa-solid fa-moon';
+      }
+    }
+    localStorage.setItem('medtoken_theme', theme);
+  }
+
+  applyTheme(initialTheme);
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme(newTheme);
+      showToast(
+        newTheme === 'dark' ? 'Clinical Dark Mode Enabled' : 'Clinical Light Mode Enabled',
+        'info'
+      );
+    });
+  }
+
+  // ==========================================
+  // 0.1 Responsive Mobile Navigation Drawer
+  // ==========================================
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mainNav = document.getElementById('mainNav');
+
+  if (hamburgerBtn && mainNav) {
+    hamburgerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = hamburgerBtn.classList.toggle('active');
+      mainNav.classList.toggle('active');
+      hamburgerBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    // Close menu when clicking on any navigation item
+    mainNav.querySelectorAll('.nav-item').forEach((item) => {
+      item.addEventListener('click', () => {
+        hamburgerBtn.classList.remove('active');
+        mainNav.classList.remove('active');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mainNav.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+        hamburgerBtn.classList.remove('active');
+        mainNav.classList.remove('active');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  // ==========================================
   // 1. Dynamic Date Calculation for Date Tabs
   // ==========================================
   const today = new Date();
@@ -31,29 +99,143 @@ document.addEventListener('DOMContentLoaded', () => {
   let selectedDayLabel = `Today (${formatDateShort(today)})`;
 
   // ==========================================
-  // 2. Specialty Interactive Filter UI
+  // 2. Comprehensive Directory Search, Filter & Sort Engine
+  // (Module: feature-directory-filters - Lead: Rohit Kumar)
   // ==========================================
   const filterButtons = document.querySelectorAll('.filter-btn');
-  const doctorCards = document.querySelectorAll('.doctor-card');
+  const doctorCards = Array.from(document.querySelectorAll('.doctor-card'));
+  const doctorGrid = document.getElementById('doctorGrid');
+  const doctorSearchInput = document.getElementById('doctorSearchInput');
+  const clearSearchBtn = document.getElementById('clearSearchBtn');
+  const doctorSortSelect = document.getElementById('doctorSortSelect');
+  const doctorResultsCount = document.getElementById('doctorResultsCount');
+  const noDoctorsMsg = document.getElementById('noDoctorsMsg');
+  const symptomChips = document.querySelectorAll('.symptom-chip');
+  const resetDirectoryFiltersBtn = document.getElementById('resetDirectoryFiltersBtn');
 
+  let activeSpecialty = 'all';
+
+  function filterAndSortDoctors() {
+    const query = (doctorSearchInput ? doctorSearchInput.value : '').trim().toLowerCase();
+    const sortMode = doctorSortSelect ? doctorSortSelect.value : 'default';
+
+    // Toggle clear search button visibility
+    if (clearSearchBtn) {
+      clearSearchBtn.style.display = query.length > 0 ? 'flex' : 'none';
+    }
+
+    let visibleCount = 0;
+
+    // Filter matching cards
+    doctorCards.forEach((card) => {
+      const cardSpecialty = (card.getAttribute('data-specialty') || '').toLowerCase();
+      const cardName = (card.getAttribute('data-name') || '').toLowerCase();
+      const cardSymptoms = (card.getAttribute('data-symptoms') || '').toLowerCase();
+      const cardText = card.textContent.toLowerCase();
+
+      const matchesSpecialty = activeSpecialty === 'all' || cardSpecialty === activeSpecialty;
+      const matchesQuery = !query || cardName.includes(query) || cardSpecialty.includes(query) || cardSymptoms.includes(query) || cardText.includes(query);
+
+      if (matchesSpecialty && matchesQuery) {
+        card.style.display = 'flex';
+        card.style.animation = 'fadeInCard 0.35s ease forwards';
+        visibleCount += 1;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Update results counter badge
+    if (doctorResultsCount) {
+      doctorResultsCount.innerHTML = `<i class="fa-solid fa-user-doctor"></i> Showing ${visibleCount} of ${doctorCards.length} Doctors`;
+    }
+
+    // Toggle empty state placeholder
+    if (noDoctorsMsg) {
+      noDoctorsMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    // Apply Sorting on visible cards within doctorGrid
+    if (doctorGrid && visibleCount > 0 && sortMode !== 'default') {
+      const sortedCards = [...doctorCards].sort((a, b) => {
+        const feeA = parseInt(a.getAttribute('data-fee') || '0', 10);
+        const feeB = parseInt(b.getAttribute('data-fee') || '0', 10);
+        const ratingA = parseFloat(a.getAttribute('data-rating') || '0');
+        const ratingB = parseFloat(b.getAttribute('data-rating') || '0');
+        const expA = parseInt(a.getAttribute('data-experience') || '0', 10);
+        const expB = parseInt(b.getAttribute('data-experience') || '0', 10);
+
+        if (sortMode === 'fee-asc') return feeA - feeB;
+        if (sortMode === 'fee-desc') return feeB - feeA;
+        if (sortMode === 'rating-desc') return ratingB - ratingA;
+        if (sortMode === 'exp-desc') return expB - expA;
+        return 0;
+      });
+
+      sortedCards.forEach((card) => doctorGrid.appendChild(card));
+    }
+  }
+
+  // Filter Buttons Click
   filterButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       filterButtons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
-
-      const specialty = btn.getAttribute('data-specialty');
-
-      doctorCards.forEach((card) => {
-        const cardSpecialty = card.getAttribute('data-specialty');
-        if (specialty === 'all' || cardSpecialty === specialty) {
-          card.style.display = 'flex';
-          card.style.animation = 'fadeInCard 0.4s ease forwards';
-        } else {
-          card.style.display = 'none';
-        }
-      });
+      activeSpecialty = btn.getAttribute('data-specialty');
+      filterAndSortDoctors();
     });
   });
+
+  // Live Search Input with Instant Filtering
+  if (doctorSearchInput) {
+    doctorSearchInput.addEventListener('input', () => {
+      filterAndSortDoctors();
+    });
+  }
+
+  // Clear Search Query
+  if (clearSearchBtn) {
+    clearSearchBtn.addEventListener('click', () => {
+      if (doctorSearchInput) doctorSearchInput.value = '';
+      filterAndSortDoctors();
+      if (doctorSearchInput) doctorSearchInput.focus();
+    });
+  }
+
+  // Quick Symptom Chips Click
+  symptomChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const symptomQuery = chip.getAttribute('data-query');
+      if (doctorSearchInput) {
+        doctorSearchInput.value = symptomQuery;
+        filterAndSortDoctors();
+        showToast(`Filtered doctors for symptom: "${symptomQuery}"`, 'info');
+      }
+    });
+  });
+
+  // Sort Selection Change
+  if (doctorSortSelect) {
+    doctorSortSelect.addEventListener('change', () => {
+      filterAndSortDoctors();
+      const selectedText = doctorSortSelect.options[doctorSortSelect.selectedIndex].text;
+      showToast(`Sorted by: ${selectedText}`, 'info');
+    });
+  }
+
+  // Reset Filters Button
+  if (resetDirectoryFiltersBtn) {
+    resetDirectoryFiltersBtn.addEventListener('click', () => {
+      if (doctorSearchInput) doctorSearchInput.value = '';
+      if (doctorSortSelect) doctorSortSelect.value = 'default';
+      activeSpecialty = 'all';
+      filterButtons.forEach((b) => {
+        b.classList.toggle('active', b.getAttribute('data-specialty') === 'all');
+      });
+      filterAndSortDoctors();
+      showToast('Doctor directory filters reset', 'info');
+    });
+  }
 
   // ==========================================
   // 3. Doctor Selection Sync & Banner Updates
@@ -266,9 +448,29 @@ document.addEventListener('DOMContentLoaded', () => {
         modalQueuePos.className = 'pass-val text-success';
       }
 
+      // Save Token Record to LocalStorage
+      const tokenRecord = {
+        tokenNumber: tokenNumberStr,
+        numericId: currentTokenCount,
+        uid: randomUid,
+        patientName: nameInput.value.trim(),
+        ageGender: `${ageInput.value} Yrs / ${genderInput.value}`,
+        phone: phoneInput.value.trim(),
+        doctor: selectedDoctor,
+        specialty: specialty,
+        room: room,
+        fee: `₹${fee}`,
+        date: selectedDayLabel,
+        estTime: slotInput.value.split('[')[0].trim(),
+        isEmergency: isEmergency && isEmergency.checked,
+        createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      saveTokenToStorage(tokenRecord);
+
       // Open Modal
       openModal();
-      showToast(`Appointment Confirmed! Token ${tokenNumberStr} generated successfully.`, 'success');
+      showToast(`Appointment Confirmed! Token ${tokenNumberStr} saved to your device.`, 'success');
     });
   }
 
@@ -317,6 +519,238 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
+  // 6.1 LocalStorage Booked Tokens & Tracking System
+  // (Module: feature-directory-filters / Lead: Rohit Kumar)
+  // ==========================================
+  const myTokensModal = document.getElementById('myTokensModal');
+  const trackTokenNavBtn = document.getElementById('trackTokenNavBtn');
+  const closeMyTokensBtn = document.getElementById('closeMyTokensBtn');
+  const myTokensListContainer = document.getElementById('myTokensListContainer');
+  const lookupTokenInput = document.getElementById('lookupTokenInput');
+  const refreshTokensBtn = document.getElementById('refreshTokensBtn');
+  const trackModalServingToken = document.getElementById('trackModalServingToken');
+
+  function getStoredTokens() {
+    try {
+      const data = localStorage.getItem('medtoken_booked_tokens');
+      if (!data) {
+        // Pre-seed with one default demonstration pass
+        const sampleToken = [{
+          tokenNumber: '#TK-108',
+          numericId: 108,
+          uid: 'MED-2026-8708',
+          patientName: 'Rohit Kumar (Sample Patient)',
+          ageGender: '22 Yrs / Male',
+          phone: '9876543210',
+          doctor: 'Dr. Rohit Kumar',
+          specialty: 'General Physician',
+          room: 'Room 102',
+          fee: '₹500',
+          date: `Today (${formatDateShort(today)})`,
+          estTime: '10:30 AM',
+          isEmergency: false,
+          createdAt: '09:15 AM'
+        }];
+        localStorage.setItem('medtoken_booked_tokens', JSON.stringify(sampleToken));
+        return sampleToken;
+      }
+      return JSON.parse(data);
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveTokenToStorage(tokenObj) {
+    const tokens = getStoredTokens();
+    tokens.unshift(tokenObj);
+    localStorage.setItem('medtoken_booked_tokens', JSON.stringify(tokens));
+  }
+
+  function deleteTokenFromStorage(tokenNumber) {
+    const tokens = getStoredTokens().filter((t) => t.tokenNumber !== tokenNumber);
+    localStorage.setItem('medtoken_booked_tokens', JSON.stringify(tokens));
+  }
+
+  function displayStoredTokenInModal(token) {
+    document.getElementById('modalTokenNum').textContent = token.tokenNumber;
+    document.getElementById('modalPatientName').textContent = token.patientName;
+    document.getElementById('modalAgeGender').textContent = token.ageGender;
+    document.getElementById('modalDoctor').textContent = token.doctor;
+    document.getElementById('modalSpecialty').textContent = token.specialty;
+    document.getElementById('modalRoom').textContent = token.room;
+    document.getElementById('modalFee').textContent = `${token.fee} (Pay at desk)`;
+    document.getElementById('modalDate').textContent = token.date;
+    document.getElementById('modalEstTime').textContent = token.estTime;
+    document.getElementById('modalUid').textContent = token.uid;
+
+    const priorityBadge = document.getElementById('tokenPriorityBadge');
+    const modalQueuePos = document.getElementById('modalQueuePos');
+
+    if (token.isEmergency) {
+      priorityBadge.textContent = 'PRIORITY / URGENT';
+      priorityBadge.className = 'pass-status-pill priority';
+      modalQueuePos.textContent = 'Immediate Priority Queue';
+      modalQueuePos.className = 'pass-val text-danger';
+    } else {
+      priorityBadge.textContent = 'CONFIRMED';
+      priorityBadge.className = 'pass-status-pill';
+      modalQueuePos.textContent = `Queue Active`;
+      modalQueuePos.className = 'pass-val text-success';
+    }
+
+    closeMyTokensModal();
+    openModal();
+  }
+
+  function renderMyTokens(filterQuery = '') {
+    if (!myTokensListContainer) return;
+    const tokens = getStoredTokens();
+    const query = filterQuery.trim().toLowerCase();
+
+    const filtered = tokens.filter((t) => {
+      if (!query) return true;
+      return (
+        t.tokenNumber.toLowerCase().includes(query) ||
+        t.patientName.toLowerCase().includes(query) ||
+        (t.phone && t.phone.includes(query)) ||
+        t.doctor.toLowerCase().includes(query)
+      );
+    });
+
+    if (trackModalServingToken) {
+      trackModalServingToken.textContent = `#TK-0${currentServingNumber}`;
+    }
+
+    if (filtered.length === 0) {
+      myTokensListContainer.innerHTML = `
+        <div class="empty-tokens-view">
+          <i class="fa-solid fa-ticket-simple"></i>
+          <h4>No Booked Tokens Found</h4>
+          <p>${query ? 'No token matches your search query.' : 'You have not booked any OPD tokens on this device yet.'}</p>
+        </div>
+      `;
+      return;
+    }
+
+    myTokensListContainer.innerHTML = '';
+    filtered.forEach((tok) => {
+      const card = document.createElement('div');
+      card.className = 'token-history-card';
+
+      // Queue status calculation
+      let statusHtml = '';
+      const diff = tok.numericId - currentServingNumber;
+
+      if (tok.numericId === currentServingNumber) {
+        card.classList.add('active-now');
+        statusHtml = `<span class="badge-status fast"><i class="fa-solid fa-bullhorn"></i> NOW CALLING in ${tok.room}</span>`;
+      } else if (tok.numericId < currentServingNumber) {
+        statusHtml = `<span class="badge-status" style="background:#e2e8f0; color:#475569;"><i class="fa-solid fa-check-double"></i> Consultation Completed</span>`;
+      } else {
+        const estMins = diff * 10;
+        statusHtml = `<span class="badge-status wait"><i class="fa-regular fa-clock"></i> ${diff} patients ahead (~${estMins} mins wait)</span>`;
+      }
+
+      card.innerHTML = `
+        <div class="token-card-top">
+          <span class="token-id-badge">${tok.tokenNumber}</span>
+          <span class="token-date-time"><i class="fa-regular fa-calendar"></i> ${tok.date} • ${tok.estTime}</span>
+        </div>
+        <div class="token-card-body">
+          <div>
+            <strong>Patient Name</strong>
+            <span>${tok.patientName}</span>
+          </div>
+          <div>
+            <strong>Doctor & Room</strong>
+            <span>${tok.doctor} (${tok.room})</span>
+          </div>
+          <div>
+            <strong>Department</strong>
+            <span>${tok.specialty}</span>
+          </div>
+          <div>
+            <strong>Consultation Fee</strong>
+            <span>${tok.fee}</span>
+          </div>
+        </div>
+        <div class="token-queue-status">
+          <span>Live Queue Status:</span>
+          ${statusHtml}
+        </div>
+        <div class="token-card-actions">
+          <button type="button" class="btn btn-primary btn-sm view-pass-btn">
+            <i class="fa-solid fa-qrcode"></i> View / Print Pass
+          </button>
+          <button type="button" class="btn btn-outline btn-sm delete-token-btn" style="color: var(--danger-color); border-color: var(--danger-color);">
+            <i class="fa-solid fa-trash-can"></i> Cancel
+          </button>
+        </div>
+      `;
+
+      // Event listeners for card buttons
+      const viewBtn = card.querySelector('.view-pass-btn');
+      const delBtn = card.querySelector('.delete-token-btn');
+
+      if (viewBtn) {
+        viewBtn.addEventListener('click', () => {
+          displayStoredTokenInModal(tok);
+        });
+      }
+
+      if (delBtn) {
+        delBtn.addEventListener('click', () => {
+          if (confirm(`Are you sure you want to cancel token ${tok.tokenNumber}?`)) {
+            deleteTokenFromStorage(tok.tokenNumber);
+            renderMyTokens(lookupTokenInput ? lookupTokenInput.value : '');
+            showToast(`Token ${tok.tokenNumber} cancelled successfully.`, 'info');
+          }
+        });
+      }
+
+      myTokensListContainer.appendChild(card);
+    });
+  }
+
+  function openMyTokensModal() {
+    if (myTokensModal) {
+      renderMyTokens(lookupTokenInput ? lookupTokenInput.value : '');
+      myTokensModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeMyTokensModal() {
+    if (myTokensModal) {
+      myTokensModal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+  }
+
+  if (trackTokenNavBtn) trackTokenNavBtn.addEventListener('click', openMyTokensModal);
+  if (closeMyTokensBtn) closeMyTokensBtn.addEventListener('click', closeMyTokensModal);
+  if (refreshTokensBtn) {
+    refreshTokensBtn.addEventListener('click', () => {
+      renderMyTokens(lookupTokenInput ? lookupTokenInput.value : '');
+      showToast('Queue tracking refreshed', 'info');
+    });
+  }
+
+  if (lookupTokenInput) {
+    lookupTokenInput.addEventListener('input', () => {
+      renderMyTokens(lookupTokenInput.value);
+    });
+  }
+
+  if (myTokensModal) {
+    myTokensModal.addEventListener('click', (e) => {
+      if (e.target === myTokensModal) {
+        closeMyTokensModal();
+      }
+    });
+  }
+
+  // ==========================================
   // 7. Toast Notification System
   // ==========================================
   function showToast(message, type = 'info') {
@@ -360,6 +794,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (nextServingToken) {
       nextServingToken.textContent = `#TK-0${currentServingNumber + 1}`;
+    }
+    if (trackModalServingToken) {
+      trackModalServingToken.textContent = `#TK-0${currentServingNumber}`;
     }
   }, 60000);
 });

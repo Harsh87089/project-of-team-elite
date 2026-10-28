@@ -23,7 +23,7 @@ To maintain a clean repository and prevent merge conflicts, each member was assi
 
 | Team Member | Branch Name | Assigned Feature Module |
 | :--- | :--- | :--- |
-| **Rohit Kumar** (Team Lead) | `feature-directory-filters` | Header navigation, Hero banner with live counters, and Semantic Specialist Directory with interactive filters. |
+| **Rohit Kumar** (Team Lead) | `feature-directory-filters` | Header navigation with Clinical Dark Mode toggle & mobile drawer, Hero banner with live counters, Specialist Directory with instant symptom search, multi-criteria sorting, and LocalStorage-backed My Tokens Queue Tracker. |
 | **Harsh** | `feature-profile-cards` | Doctor Profile Cards using CSS Flexbox & CSS Grid, custom card hover effects, badges, and pricing layouts. |
 | **Abhay** | `feature-booking-system` | Interactive Time-Slot Picker, HTML5 Patient Form with CSS validation pseudo-classes, and printable Digital Token Modal. |
 
@@ -34,17 +34,21 @@ This project is built according to the **CSE326 Internet Programming** curriculu
 
 - **Unit I & II (HTML5 & Semantic Structure):**
   - Semantic tags: `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`, `<footer>`.
-  - Accessible form controls: `<input type="text|number|tel|email|checkbox">`, `<select>`, `<textarea>`, `<button>`.
+  - Accessible form controls: `<input type="text|number|tel|email|checkbox|search">`, `<select>`, `<textarea>`, `<button>`.
   - HTML5 Form constraints: `required`, `minlength`, `maxlength`, `min`, `max`, `pattern="[0-9]{10}"`.
+  - W3C accessibility compliance: ARIA labels (`aria-label`, `role="group"`, `role="dialog"`, `aria-live="polite"`).
 - **Unit III (Advanced CSS Architecture):**
-  - **CSS Custom Properties (Variables):** Theme colors (`--primary-color`, `--secondary-color`), shadows, and smooth transitions.
-  - **CSS Grid Layout:** Multi-column doctor cards grid and 3-column time slot layout.
-  - **CSS Flexbox:** App header alignment, filter controls, booking container columns, and footer arrangement.
-  - **CSS Pseudo-classes & States:** `:hover`, `:focus`, `:active`, `:disabled`, `:valid`, `:invalid`, `:checked`.
-  - **CSS Keyframes & Micro-animations:** Pulse animations on live indicators and modal slide transitions.
-  - **Responsive Design:** CSS Media Queries for mobile (`max-width: 480px`), tablet (`max-width: 768px`), and desktop.
+  - **CSS Custom Properties (Variables):** Theme colors (`--primary-color`, `--secondary-color`), clinical dark mode palette (`[data-theme="dark"]`), shadows, and smooth transitions.
+  - **CSS Grid Layout:** Multi-column doctor cards grid, 3-column time slot layout, and token details pass grid.
+  - **CSS Flexbox:** App header alignment, search & filter toolbar, quick symptom chips, booking container columns, and footer arrangement.
+  - **CSS Pseudo-classes & States:** `:hover`, `:focus`, `:focus-within`, `:active`, `:disabled`, `:valid`, `:invalid`, `:checked`.
+  - **CSS Keyframes & Micro-animations:** Pulse LED animation, modal slide transitions (`modalSlideUp`), and mobile drawer opening (`fadeInDrawer`).
+  - **Responsive Design:** CSS Media Queries for mobile (`max-width: 480px`), tablet (`max-width: 768px` with collapsible hamburger navigation), and desktop.
 - **Client-Side Interactions (Vanilla JavaScript):**
-  - Live specialty filter logic without page reloads.
+  - Live Doctor & Symptom search engine with instant query matching and empty-state handling.
+  - Multi-criteria Doctor sorting (Fee low-high, Fee high-low, Rating, Clinical Experience).
+  - Dark Mode theme toggle with system preference detection and `localStorage` persistence.
+  - LocalStorage-backed "My Tokens" modal: tracks active tokens, real-time wait estimation, and re-prints digital passes.
   - Pre-selection sync between Doctor cards and booking form.
   - Dynamic token numbering and printable pass modal with `window.print()`.
 

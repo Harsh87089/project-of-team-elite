@@ -42,17 +42,36 @@
       </a>
 
       <!-- Navigation Menu -->
-      <nav class="nav-links" aria-label="Main Navigation">
+      <nav class="nav-links" id="mainNav" aria-label="Main Navigation">
         <a href="#hero" class="nav-item active"><i class="fa-solid fa-house"></i> Home</a>
         <a href="#directory" class="nav-item"><i class="fa-solid fa-user-doctor"></i> Specialists</a>
         <a href="#booking" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Book Token</a>
         <a href="#queue-tracker" class="nav-item"><i class="fa-solid fa-list-ol"></i> Live Queue</a>
         <a href="#facilities" class="nav-item"><i class="fa-solid fa-hospital"></i> Facilities</a>
+        <a href="#team" class="nav-item"><i class="fa-solid fa-users"></i> Team</a>
       </nav>
 
-      <!-- Header Action -->
+      <!-- Header Action & Utility Controls -->
       <div class="header-cta">
-        <a href="#booking" class="btn btn-primary btn-sm"><i class="fa-solid fa-ticket"></i> Fast Token</a>
+        <!-- Track Token / Patient History Lookup -->
+        <button type="button" class="btn btn-outline btn-sm" id="trackTokenNavBtn" title="View previously booked OPD tokens and real-time status">
+          <i class="fa-solid fa-clock-rotate-left"></i> <span>My Tokens</span>
+        </button>
+
+        <!-- Fast Booking CTA -->
+        <a href="#booking" class="btn btn-primary btn-sm"><i class="fa-solid fa-ticket"></i> <span>Fast Token</span></a>
+
+        <!-- Dark / Light Theme Toggle -->
+        <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Switch between light and dark clinical theme" title="Toggle Dark/Light Mode">
+          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+
+        <!-- Responsive Hamburger Toggle for Mobile -->
+        <button type="button" class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="mainNav">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
       </div>
     </div>
   </header>
@@ -147,6 +166,43 @@
           <p class="section-subtitle">Choose from experienced medical practitioners available for consultation today</p>
         </div>
 
+        <!-- Directory Search, Sort & Quick Filter Toolbar -->
+        <div class="directory-toolbar">
+          <div class="directory-search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+            <input type="search" id="doctorSearchInput" placeholder="Search by doctor name, symptom (e.g. fever, skin, tooth), or specialty..." class="directory-search-input" aria-label="Search doctors by name or symptom">
+            <button type="button" id="clearSearchBtn" class="clear-search-btn" aria-label="Clear search query" style="display: none;">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="directory-sort-box">
+            <label for="doctorSortSelect"><i class="fa-solid fa-arrow-down-wide-short"></i> Sort By:</label>
+            <select id="doctorSortSelect" class="sort-select" aria-label="Sort doctors list">
+              <option value="default">Default Order</option>
+              <option value="fee-asc">Fee: Low to High</option>
+              <option value="fee-desc">Fee: High to Low</option>
+              <option value="rating-desc">Rating: Highest First</option>
+              <option value="exp-desc">Experience: Most Senior</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Directory Meta Row: Results Counter & Quick Symptom Chips -->
+        <div class="directory-meta-row">
+          <div class="results-counter-badge" id="doctorResultsCount" aria-live="polite">
+            <i class="fa-solid fa-user-doctor"></i> Showing 4 of 4 Doctors
+          </div>
+          <div class="symptom-chips-group" role="group" aria-label="Quick symptom tags">
+            <span class="chips-label"><i class="fa-solid fa-bolt"></i> Popular:</span>
+            <button type="button" class="symptom-chip" data-query="fever">Fever / Viral</button>
+            <button type="button" class="symptom-chip" data-query="skin">Skin & Acne</button>
+            <button type="button" class="symptom-chip" data-query="child">Child Care</button>
+            <button type="button" class="symptom-chip" data-query="tooth">Toothache</button>
+            <button type="button" class="symptom-chip" data-query="checkup">Routine Checkup</button>
+          </div>
+        </div>
+
         <!-- Specialty Interactive Filter Buttons -->
         <div class="filter-container" role="group" aria-label="Specialty Filters">
           <button class="filter-btn active" data-specialty="all">
@@ -170,7 +226,7 @@
         <div class="doctor-grid" id="doctorGrid">
           
           <!-- Doctor 1: General Physician -->
-          <article class="doctor-card" data-specialty="general" data-id="doc-rohit">
+          <article class="doctor-card" data-specialty="general" data-id="doc-rohit" data-name="Dr. Rohit Kumar" data-fee="500" data-rating="4.9" data-experience="12" data-symptoms="fever cold cough weakness fatigue viral infection headache bp diabetes checkup flu internal medicine">
             <div class="card-badge available"><i class="fa-solid fa-circle"></i> Available Today</div>
             <div class="doc-media">
               <img src="assets/doctor1.jpg" alt="Dr. Rohit Kumar - General Physician" class="doc-img">
@@ -219,7 +275,7 @@
           </article>
 
           <!-- Doctor 2: Pediatrician -->
-          <article class="doctor-card" data-specialty="pediatrician" data-id="doc-priya">
+          <article class="doctor-card" data-specialty="pediatrician" data-id="doc-priya" data-name="Dr. Priya Sharma" data-fee="600" data-rating="5.0" data-experience="9" data-symptoms="child infant baby fever cough cold pediatric growth vaccination newborn pediatric flu stomach digestion">
             <div class="card-badge available"><i class="fa-solid fa-circle"></i> Available Today</div>
             <div class="doc-media">
               <img src="assets/doctor2.jpg" alt="Dr. Priya Sharma - Pediatrician" class="doc-img">
@@ -268,7 +324,7 @@
           </article>
 
           <!-- Doctor 3: Dermatologist -->
-          <article class="doctor-card" data-specialty="dermatologist" data-id="doc-rahul">
+          <article class="doctor-card" data-specialty="dermatologist" data-id="doc-rahul" data-name="Dr. Rahul Sharma" data-fee="750" data-rating="4.8" data-experience="11" data-symptoms="skin rash itching acne eczema allergy hair loss fungal infection dry skin dermatology dark spots sunburn">
             <div class="card-badge available"><i class="fa-solid fa-circle"></i> Available Today</div>
             <div class="doc-media">
               <img src="assets/doctor3.jpg" alt="Dr. Rahul Sharma - Dermatologist" class="doc-img">
@@ -317,7 +373,7 @@
           </article>
 
           <!-- Doctor 4: Dentist -->
-          <article class="doctor-card" data-specialty="dentist" data-id="doc-ananya">
+          <article class="doctor-card" data-specialty="dentist" data-id="doc-ananya" data-name="Dr. Ananya Sen" data-fee="500" data-rating="4.9" data-experience="8" data-symptoms="tooth toothache dental cavity bleeding gums root canal mouth braces tooth whitening dental checkup sensitivity">
             <div class="card-badge available"><i class="fa-solid fa-circle"></i> Available Today</div>
             <div class="doc-media">
               <img src="assets/doctor4.jpg" alt="Dr. Ananya Sen - Dental Surgeon" class="doc-img">
@@ -365,6 +421,16 @@
             </div>
           </article>
 
+        </div>
+
+        <!-- Empty State When No Doctors Match Filters -->
+        <div class="no-doctors-found" id="noDoctorsMsg" style="display: none;">
+          <div class="empty-icon"><i class="fa-solid fa-user-doctor"></i></div>
+          <h3>No Matching Specialists Found</h3>
+          <p>We couldn't find any doctor matching your current search or specialty filter. Try searching for symptoms like "fever", "skin", or "tooth".</p>
+          <button type="button" class="btn btn-outline btn-sm" id="resetDirectoryFiltersBtn">
+            <i class="fa-solid fa-rotate-left"></i> Reset Search & Filters
+          </button>
         </div>
       </div>
     </section>
@@ -607,7 +673,7 @@
             <div class="team-avatar"><i class="fa-solid fa-code"></i></div>
             <h3>Rohit Kumar</h3>
             <span class="team-role">Frontend Lead • UI Architecture</span>
-            <p class="team-desc">Engineered the Hero section, Semantic Doctor Directory, and interactive specialty filters.</p>
+            <p class="team-desc">Engineered the Hero section, Doctor & Symptom Search Engine, Sort Controls, Clinical Dark Mode, and LocalStorage Token Tracker.</p>
             <span class="git-branch-tag">branch: feature-directory-filters</span>
           </div>
 
@@ -705,6 +771,44 @@
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" id="printTokenBtn"><i class="fa-solid fa-print"></i> Print / Save Token</button>
         <button type="button" class="btn btn-outline" id="bookAnotherBtn"><i class="fa-solid fa-plus"></i> New Booking</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unit II Semantic Modal: My Booked Tokens & Queue Tracking -->
+  <div class="token-modal-overlay" id="myTokensModal" role="dialog" aria-modal="true" aria-labelledby="myTokensTitle">
+    <div class="token-modal-card track-modal-card">
+      <button class="modal-close-btn" id="closeMyTokensBtn" aria-label="Close My Tokens Dialog">&times;</button>
+      
+      <div class="track-modal-header">
+        <div class="track-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <div class="track-title-wrap">
+          <h2 id="myTokensTitle">My Booked Tokens</h2>
+          <p class="track-subtitle">View appointment passes saved on this device or search your live queue position</p>
+        </div>
+      </div>
+
+      <!-- Quick Token Number Lookup Form -->
+      <div class="token-lookup-bar">
+        <div class="lookup-input-wrap">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="lookupTokenInput" placeholder="Filter by Token # (e.g. #TK-109), Name, or Phone..." class="form-control" aria-label="Filter my booked tokens">
+        </div>
+        <button type="button" id="refreshTokensBtn" class="btn btn-outline btn-sm" title="Refresh queue status">
+          <i class="fa-solid fa-rotate"></i> Refresh Status
+        </button>
+      </div>
+
+      <!-- Live Queue Notice Banner -->
+      <div class="queue-notice-banner">
+        <span class="live-led"></span>
+        <span>Clinic Currently Serving: <strong id="trackModalServingToken">#TK-042</strong></span>
+        <span class="notice-sub">Est. wait: ~10 mins per patient</span>
+      </div>
+
+      <!-- List of Active / Past Tokens Container -->
+      <div class="my-tokens-list" id="myTokensListContainer" role="region" aria-label="Booked tokens list">
+        <!-- Rendered dynamically by JavaScript -->
       </div>
     </div>
   </div>
